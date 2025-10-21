@@ -26,6 +26,31 @@ outgoing connectivity to your MicroVM without any further setup.
 As kvmtool seems to lack a built-in DHCP server, additional static IP
 configuration is necessary inside the MicroVM.
 
+### macOS vmnet-shared Networking (QEMU only)
+
+On macOS hosts, you can use the native vmnet-shared networking mode instead
+of user-mode networking for better performance and integration with the host
+network. This provides guest VMs with internet access via the host's network.
+
+To enable vmnet-shared networking with QEMU on macOS:
+
+```nix
+{
+  microvm = {
+    hypervisor = "qemu";
+    qemu.networkMode = "vmnet-shared";
+  };
+}
+```
+
+**Requirements:**
+- macOS (Darwin) host system
+- QEMU 7.1.0 or later with vmnet support
+- Proper QEMU entitlements and permissions on macOS
+
+**Note:** This option is only available on macOS. An error will be raised if
+you attempt to use it on Linux or other platforms.
+
 ## `type = "tap"`
 
 Use a virtual tuntap Ethernet interface. Its name is the value of

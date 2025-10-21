@@ -54,7 +54,7 @@ let
     else "threads";
 
   inherit (microvmConfig) hostName vcpu mem balloon initialBalloonMem deflateOnOOM hotplugMem hotpluggedMem user interfaces shares socket forwardPorts devices vsock graphics storeOnDisk kernel initrdPath storeDisk credentialFiles;
-  inherit (microvmConfig.qemu) machine extraArgs serialConsole;
+  inherit (microvmConfig.qemu) machine extraArgs serialConsole networkMode;
 
 
   volumes = withDriveLetters microvmConfig;
@@ -265,6 +265,15 @@ lib.warnIf (mem == 2048) ''
       }.${proto}) (enumerate 0 shares)
     )
     ++
+    # Handle vmnet-shared networking for macOS
+    (if networkMode == "vmnet-shared"
+     then
+       if !vmHostPackages.stdenv.hostPlatform.isDarwin
+       then throw "networkMode 'vmnet-shared' is only supported on macOS (Darwin) hosts"
+       else [
+         "-nic" "vmnet-shared"
+       ]
+     else []) ++
     lib.warnIf (
       forwardPorts != [] &&
       ! builtins.any ({ type, ... }: type == "user") interfaces

@@ -336,6 +336,29 @@ in
       });
     };
 
+    qemu.networkMode = mkOption {
+      type = with types; nullOr (enum [ "vmnet-shared" ]);
+      default = null;
+      description = ''
+        QEMU network mode for macOS hosts.
+
+        When set to "vmnet-shared", uses macOS's vmnet-shared networking
+        to provide guest VMs with internet access via the host.
+
+        ::: {.note}
+        Only supported on macOS (Darwin) hosts. An error will be raised
+        if this option is used on non-macOS platforms.
+        :::
+
+        ::: {.warning}
+        Requires QEMU to be built with vmnet support and proper entitlements.
+        On macOS, you may need to run QEMU with appropriate permissions.
+        Minimum QEMU version: 7.1.0
+        :::
+      '';
+      example = literalExpression ''"vmnet-shared"'';
+    };
+
     shares = mkOption {
       description = "Shared directory trees";
       default = [];
