@@ -51,6 +51,8 @@ let
 
   aioEngine = if vmHostPackages.stdenv.hostPlatform.isLinux
     then "io_uring"
+    else if vmHostPackages.stdenv.hostPlatform.isDarwin
+    then "native"
     else "threads";
 
   inherit (microvmConfig) hostName vcpu mem balloon initialBalloonMem deflateOnOOM hotplugMem hotpluggedMem user interfaces shares socket forwardPorts devices vsock graphics storeOnDisk kernel initrdPath storeDisk credentialFiles;

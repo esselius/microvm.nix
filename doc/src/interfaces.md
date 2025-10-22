@@ -51,6 +51,11 @@ To enable vmnet-shared networking with QEMU on macOS:
 **Note:** This option is only available on macOS. An error will be raised if
 you attempt to use it on Linux or other platforms.
 
+**Performance:** On macOS, QEMU automatically uses the `native` AIO engine for
+disk I/O, which provides better performance than the default `threads` backend.
+For shared folders, consider using `virtiofs` instead of `9p` for 2-3x better
+performance (see [Shares](./shares.md) documentation).
+
 ## `type = "tap"`
 
 Use a virtual tuntap Ethernet interface. Its name is the value of
